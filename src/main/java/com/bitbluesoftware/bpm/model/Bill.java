@@ -1,19 +1,30 @@
 package com.bitbluesoftware.bpm.model;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Bill {
+	int id;
 	String name;
 	double amount;
 	Date date;
 	User user;
 	Transaction transaction;
 	
-	public Bill(String name, double amount, Date date, User user) {
+	public Bill(int id, String name, double amount, Date date, User user, Transaction transaction) {
+		this.id=id;
 		this.name=name;
 		this.amount=amount;
 		this.date=date;
 		this.user=user;
+		this.transaction=transaction;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 	
 	public String getName() {
@@ -54,5 +65,9 @@ public class Bill {
 	
 	public void setTransaction(Transaction transaction) {
 		this.transaction = transaction;
+	}
+
+	public String toString(){
+		return "Name: "+name+"  Amount: "+amount+" Date: "+date+"  User: "+user+"  Paid: "+(transaction!=null);
 	}
 }

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Budget Portfolio Manager</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{/webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/">Budget Manager</a>
+    <a class="navbar-link" href="/transactions">Transactions</a>
+    <a class="navbar-link" href="/accounts">Accounts</a>
+    <a class="navbar-link" href="/bills">Bills</a>
+    <a class="navbar-link" href="/categories">Categories</a>
+    <a class="navbar-link" href="/profile" th:if="${user}">Profile</a>
+    <a class="navbar-login" href="/logout" th:if="${user}">Logout</a>
+    <a class="navbar-login" href="/login" th:unless="${user}">Login</a>
+</nav>
+<main role="main" class="container">
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form th:action="'/edit/category?id='+${category.getId()}" method="post">
+                <fieldset>
+                    <h1>Edit Category</h1>
+
+                    <div th:if="${error}">
+                        <div class="alert alert-danger">
+                            <p th:text="${error}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" name="name" id="name" class="form-control input-lg"
+                               placeholder="Name" th:value="${category.getName()}" required="true" autofocus="true"/>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit"/>
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

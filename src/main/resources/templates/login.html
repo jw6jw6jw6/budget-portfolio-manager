@@ -1,57 +1,70 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
->
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example </title>
-    <div th:replace="fragments/header :: header-css"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Budget Portfolio Manager</title>
+
+    <link rel="stylesheet" type="text/css" th:href="@{webjars/bootstrap/4.2.1/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}"/>
+
 </head>
 <body>
-
-<div th:replace="fragments/header :: header"/>
-
-<div class="container">
-
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/">Budget Manager</a>
+    <a class="navbar-link" href="/transactions">Transactions</a>
+    <a class="navbar-link" href="/accounts">Accounts</a>
+    <a class="navbar-link" href="/bills">Bills</a>
+    <a class="navbar-link" href="/categories">Categories</a>
+    <a class="navbar-link" href="/profile" th:if="${user}">Profile</a>
+    <a class="navbar-login" href="/logout" th:if="${user}">Logout</a>
+    <a class="navbar-login" href="/login" th:unless="${user}">Login</a>
+</nav>
+<main role="main" class="container">
     <div class="row" style="margin-top:20px">
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-            <form th:action="@{/login}" method="post">
-                <fieldset>
-                    <h1>Please Sign In</h1>
+            <div th:if="${user}">
+                <h5 th:text="'Hello, ' + ${user.getFirstName()}+' '+${user.getLastName()}"></h5>
+            </div>
+            <div th:unless="${user}">
+                <form th:action="@{/login}" method="post">
+                    <fieldset>
+                        <h1>Sign In</h1>
 
-                    <div th:if="${param.error}">
-                        <div class="alert alert-danger">
-                            Invalid username and password.
+                        <div th:if="${error}">
+                            <div class="alert alert-danger">
+                                Invalid username and password.
+                            </div>
                         </div>
-                    </div>
-                    <div th:if="${param.logout}">
-                        <div class="alert alert-info">
-                            You have been logged out.
+                        <div th:if="${logout}">
+                            <div class="alert alert-info">
+                                You have been logged out.
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="form-group">
-                        <input type="text" name="username" id="username" class="form-control input-lg"
-                               placeholder="UserName" required="true" autofocus="true"/>
-                    </div>
-                    <div class="form-group">
-                        <input type="password" name="password" id="password" class="form-control input-lg"
-                               placeholder="Password" required="true"/>
-                    </div>
+                        <div class="form-group">
+                            <input type="text" name="username" id="username" class="form-control input-lg"
+                                   placeholder="Username" required="true" autofocus="true"/>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" id="password" class="form-control input-lg"
+                                   placeholder="Password" required="true"/>
+                        </div>
 
-                    <div class="row">
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Sign In"/>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <input type="submit" class="btn btn-lg btn-primary btn-block" value="Sign In"/>
+                            </div>
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                            </div>
                         </div>
-                        <div class="col-xs-6 col-sm-6 col-md-6">
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
+                    </fieldset>
+                </form>
+            </div>
         </div>
     </div>
 
-</div>
-
-<div th:replace="fragments/footer :: footer"/>
-
+</main>
 </body>
 </html>

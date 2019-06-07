@@ -3,7 +3,7 @@ package com.bitbluesoftware.bpm.model;
 import java.util.Date;
 
 public class User {
-	
+	int id;
 	String username;
 	String firstName;
 	String lastName;
@@ -12,8 +12,10 @@ public class User {
 	Date accountCreated;
 	Date lastLogin;
 	int loginCount;
+	Role role;
 	
-	public User(String username, String firstName, String lastName, String email, String password, Date accountCreated, Date lastLogin, int loginCount) {
+	public User(int id, String username, String firstName, String lastName, String email, String password, Date accountCreated, Date lastLogin, int loginCount,Role role) {
+		this.id = id;
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -22,8 +24,16 @@ public class User {
 		this.accountCreated = accountCreated;
 		this.lastLogin = lastLogin;
 		this.loginCount = loginCount;
+		this.role=role;
 	}
-	
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	public String getUsername() {
 		return username;
@@ -88,4 +98,16 @@ public class User {
 	public void setLoginCount(int loginCount) {
 		this.loginCount = loginCount;
 	}
+
+	public Role getRole() {
+		return role;
+	}
+
+	public void setLoginCount(Role role) {
+		this.role = role;
+	}
+	
+	public String toString(){
+	    return username+"  "+ firstName+"  "+ lastName+" "+role;
+    }
 }

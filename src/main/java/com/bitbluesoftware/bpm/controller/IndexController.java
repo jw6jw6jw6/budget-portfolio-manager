@@ -1,7 +1,7 @@
 package com.bitbluesoftware.bpm.controller;
 
-import com.bitbluesoftware.bpm.model.Category;
-import com.bitbluesoftware.bpm.model.Transaction;
+import com.bitbluesoftware.bpm.model.*;
+import com.bitbluesoftware.bpm.util.AuthenticationManager;
 import com.bitbluesoftware.bpm.util.DAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,10 +10,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -24,36 +27,28 @@ public class IndexController {
 	
 	@Autowired
 	DAO dao;
+
+    @Autowired
+    AuthenticationManager authenticationManager;
 	
-	@GetMapping("/")
-	public String index(Model model) {
-		log.info("Index");
+	@RequestMapping("/")
+	public String index(@CookieValue(value = "bpmToken", defaultValue = "") String token, Model model) {
+        User user = null;
+        if(!token.isEmpty()){
+            user=dao.getToken(token);
+            if (user != null) {
+                model.addAttribute(user);
+            }
+        }
+        Map<Integer, Transaction> transactions = dao.getTransactions();
+        Map<Integer, Account> accounts = dao.getAccounts();
+        Map<Integer, Bill> bills = dao.getBills();
+        Map<Integer, Category> categopries = dao.getCategories();
 		model.addAttribute("message", new Date().toString());
-		return "index"; //view
-	}
-	
-	@RequestMapping("/transactions")
-	public String testing(@RequestParam(name = "id", required = false, defaultValue = "-1") String idString, Model model) {
-		int id = Integer.parseInt(idString);
-		log.info("Transactions");
-		ArrayList<Transaction> transactions = dao.getTransactions();
-		Transaction transaction = null;
-		if(id!=-1)
-		for(Transaction trans : transactions){
-			if(trans.getId()==id) {
-				transaction=trans;
-			}
-		}
-		log.info(transactions.size()+"");
-		model.addAttribute("message", new Date().toString()+"; Test");
-		if(id==-1) {
-			model.addAttribute("transactions", transactions);
-		} else {
-			if(transaction!=null)
-				model.addAttribute("transaction",transaction);
-			else
-				model.addAttribute("transaction","Transaction not found");
-		}
+        model.addAttribute("transactions",transactions.values());
+        model.addAttribute("accounts",accounts.values());
+        model.addAttribute("bills",bills.values());
+        model.addAttribute("categories",categopries.values());
 		return "index"; //view
 	}
 }
