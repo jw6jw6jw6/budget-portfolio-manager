@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
+import java.sql.Date;
 
 @Controller
 public class AuthenticatonController {
@@ -32,6 +32,14 @@ public class AuthenticatonController {
     public String login(@RequestParam(name = "username", required = false, defaultValue = "") String username,
                         @RequestParam(name = "password", required = false, defaultValue = "") String password,
                         @CookieValue(value = "bpmToken", defaultValue = "") String token, Model model, HttpServletResponse response) {
+        if(dao.getUsers().isEmpty()) {
+            try {
+                response.sendRedirect(response.encodeRedirectURL("/add/profile"));
+            } catch(IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+        
         User user = null;
         if(!token.isEmpty()){
             user=dao.getToken(token);
@@ -56,7 +64,7 @@ public class AuthenticatonController {
                 Cookie cookie = new Cookie("bpmToken",token1);
                 cookie.setMaxAge(28800);
                 response.addCookie(cookie);
-                user.setLastLogin(new Date());
+                user.setLastLogin(new Date(new java.util.Date().getTime()));
                 user.setLoginCount(user.getLoginCount()+1);
                 dao.updateUser(user);
                 dao.refreshData();
@@ -80,7 +88,6 @@ public class AuthenticatonController {
             response.addCookie(cookie);
             dao.removeToken(token);
         }
-        log.error(dao.getTokens().size()+"");
         model.addAttribute("message","You have been successfully logged out.");
         return "index"; //view
     }

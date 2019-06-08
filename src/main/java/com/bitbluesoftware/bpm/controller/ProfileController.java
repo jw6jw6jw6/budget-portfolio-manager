@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Map;
 
 @Controller
@@ -96,5 +96,33 @@ public class ProfileController {
             }
         }
         return "profile"; //view
+    }
+    
+    @RequestMapping("/add/profile")
+    public String addProfile(@RequestParam(name = "firstname", required = false, defaultValue = "") String firstname,
+                              @RequestParam(name = "lastname", required = false, defaultValue = "") String lastname,
+                              @RequestParam(name = "username", required = false, defaultValue = "") String username,
+                              @RequestParam(name = "email", required = false, defaultValue = "") String email,
+                              @RequestParam(name = "password", required = false, defaultValue = "") String password,
+                              @CookieValue(value = "bpmToken", defaultValue = "") String token, Model model, HttpServletResponse response) {
+        if(dao.getUsers().isEmpty()) {
+            if (!username.isEmpty() && !firstname.isEmpty() && !lastname.isEmpty() && !email.isEmpty() && !password.isEmpty()) {
+                User user = new User(0, username, firstname, lastname, email, authenticationManager.hashPassword(password), new Date(new java.util.Date().getTime()), new Date(new java.util.Date().getTime()), 0);
+                dao.insertUser(user);
+                dao.refreshData();
+                try {
+                    response.sendRedirect(response.encodeRedirectURL("/login"));
+                } catch (IOException e) {
+                    log.error(e.getMessage());
+                }
+            }
+        } else {
+            try {
+                response.sendRedirect(response.encodeRedirectURL("/login"));
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
+        }
+        return "addProfile"; //view
     }
 }

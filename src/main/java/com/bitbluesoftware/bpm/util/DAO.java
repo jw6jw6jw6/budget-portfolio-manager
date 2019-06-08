@@ -216,7 +216,7 @@ public class DAO {
 
 	public void insertTransaction(Transaction transaction) {
         try {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO transactions (name,category,amount,date,user,account) VALUES (?,?,?,?,?,?)" );
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO transactions (name,category,amount,date,user,account) VALUES (?,?,?,?,?,?)");
             statement.setString(1, transaction.getName());
             statement.setInt(2, transaction.getCategory().getId());
             statement.setDouble(3, transaction.getAmount());
@@ -248,6 +248,27 @@ public class DAO {
 		} catch (SQLException ex) {
 			// handle any errors
 			log.error("Insert Bill Error");
+			log.error("SQLException: " + ex.getMessage());
+			log.error("SQLState: " + ex.getSQLState());
+			log.error("VendorError: " + ex.getErrorCode());
+		}
+	}
+	
+	public void insertUser(User user) {
+		try {
+			PreparedStatement statement = conn.prepareStatement("INSERT INTO users (username,firstname,lastname,password,lastLogin,logincount,email,accountcreated) VALUES (?,?,?,?,?,?,?,?)" );
+			statement.setString(1, user.getUsername());
+			statement.setString(2, user.getFirstName());
+			statement.setString(3, user.getLastName());
+			statement.setString(4, user.getPassword());
+			statement.setDate(5, user.getLastLogin());
+			statement.setInt(6, user.getLoginCount());
+			statement.setString(7, user.getEmail());
+			statement.setDate(8, user.getAccountCreated());
+			statement.executeUpdate();
+		} catch (SQLException ex) {
+			// handle any errors
+			log.error("Insert User Error");
 			log.error("SQLException: " + ex.getMessage());
 			log.error("SQLState: " + ex.getSQLState());
 			log.error("VendorError: " + ex.getErrorCode());
@@ -292,7 +313,7 @@ public class DAO {
 
 	public void updateUser(User user) {
 		try {
-			PreparedStatement statement = conn.prepareStatement("UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ?, accountcreated = ?, lastlogin = ?, logincount = ?, role = ? WHERE id = ?" );
+			PreparedStatement statement = conn.prepareStatement("UPDATE users SET firstname = ?, lastname = ?, email = ?, password = ?, accountcreated = ?, lastlogin = ?, logincount = ? WHERE id = ?" );
 			statement.setString(1, user.getFirstName());
 			statement.setString(2, user.getLastName());
 			statement.setString(3, user.getEmail());
@@ -302,8 +323,7 @@ public class DAO {
 			java.sql.Date lastLogin = new java.sql.Date(user.getLastLogin().getTime());
 			statement.setDate(6, lastLogin);
 			statement.setInt(7,user.getLoginCount());
-			statement.setInt(8, user.getRole().getId());
-			statement.setInt(9, user.getId());
+			statement.setInt(8, user.getId());
 			statement.executeUpdate();
 		} catch (SQLException ex) {
 			// handle any errors
@@ -405,7 +425,7 @@ public class DAO {
 			Statement stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery("select * from users;");
 			while(rs.next()) {
-				users.put(rs.getInt("id"),new User(rs.getInt("id"),rs.getString("username"),rs.getString("firstname"),rs.getString("lastname"),rs.getString("email"),rs.getString("password"),rs.getDate("accountcreated"),rs.getDate("lastlogin"),rs.getInt("logincount"),roles.get(rs.getInt("role"))));
+				users.put(rs.getInt("id"),new User(rs.getInt("id"),rs.getString("username"),rs.getString("firstname"),rs.getString("lastname"),rs.getString("email"),rs.getString("password"),rs.getDate("accountcreated"),rs.getDate("lastlogin"),rs.getInt("logincount")));
 			}
 			rs.close();
 			stmt.close();
