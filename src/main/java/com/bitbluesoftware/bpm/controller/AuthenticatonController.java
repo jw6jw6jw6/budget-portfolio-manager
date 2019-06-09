@@ -69,7 +69,7 @@ public class AuthenticatonController {
                 dao.updateUser(user);
                 dao.refreshData();
                 try {
-                    response.sendRedirect(response.encodeRedirectURL("/profile"));
+                    response.sendRedirect(response.encodeRedirectURL("/"));
                 } catch(IOException e) {
                     log.error(e.getMessage());
                 }

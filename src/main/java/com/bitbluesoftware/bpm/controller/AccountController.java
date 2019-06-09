@@ -35,19 +35,19 @@ public class AccountController {
 	@RequestMapping("/accounts")
 	public String transactions(@RequestParam(name = "id", required = false, defaultValue = "-1") String idString,
                                @CookieValue(value = "bpmToken", defaultValue = "") String token, Model model, HttpServletResponse response) {
-        User user = null;
-        if(!token.isEmpty()){
-            user=dao.getToken(token);
-            if (user != null) {
-                model.addAttribute(user);
-            } else {
-                try {
-                    response.sendRedirect(response.encodeRedirectURL("/login"));
-                } catch(IOException e) {
-                    log.error(e.getMessage());
-                }
-            }
-        }
+		User user = null;
+		if(!token.isEmpty()){
+			user=dao.getToken(token);
+		}
+		if (user != null) {
+			model.addAttribute(user);
+		} else {
+			try {
+				response.sendRedirect(response.encodeRedirectURL("/login"));
+			} catch(IOException e) {
+				log.error(e.getMessage());
+			}
+		}
 		int id = Integer.parseInt(idString);
 		Map<Integer, Account> accounts = dao.getAccounts();
 		Account account = null;

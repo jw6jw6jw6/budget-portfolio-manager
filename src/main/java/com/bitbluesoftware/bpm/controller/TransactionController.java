@@ -35,14 +35,14 @@ public class TransactionController {
         User user = null;
         if(!token.isEmpty()){
             user=dao.getToken(token);
-            if (user != null) {
-                model.addAttribute(user);
-            } else {
-                try {
-                    response.sendRedirect(response.encodeRedirectURL("/login"));
-                } catch(IOException e) {
-                    log.error(e.getMessage());
-                }
+        }
+        if (user != null) {
+            model.addAttribute(user);
+        } else {
+            try {
+                response.sendRedirect(response.encodeRedirectURL("/login"));
+            } catch(IOException e) {
+                log.error(e.getMessage());
             }
         }
 		int id = Integer.parseInt(idString);

@@ -25,23 +25,26 @@
 </nav>
 
 <main role="main" class="container">
-    <div th:if="${error}">
-        <h4>Error:</h4>
-        <p th:text="${error}"></p>
-    </div>
-    <br><br>
-    <div th:if="${transactions}">
-        <h4 th:text="'Transactions: '+${transactions.size()}"></h4>
-    </div>
-    <div th:if="${accounts}">
-        <h4 th:text="'Accounts: '+${accounts.size()}"></h4>
-    </div>
-    <div th:if="${bills}">
-        <h4 th:text="'Bills: '+${bills.size()}"></h4>
-    </div>
-    <div th:if="${categories}">
-        <h4 th:text="'Categories: '+${categories.size()}"></h4>
-    </div>
+    <h1>Error</h1>
+    <h4 th:text="${status}+' '+${error}"></h4>
+    <table>
+        <tr>
+            <td>Date</td>
+            <td th:text="${timestamp}"/>
+        </tr>
+        <tr>
+            <td>Path</td>
+            <td th:text="${path}"/>
+        </tr>
+        <tr>
+            <td>Error</td>
+            <td th:text="${error}"/>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td th:text="${status}"/>
+        </tr>
+    </table>
 
 </main>
 <!-- /.container -->

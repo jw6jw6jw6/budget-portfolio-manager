@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -32,23 +33,29 @@ public class IndexController {
     AuthenticationManager authenticationManager;
 	
 	@RequestMapping("/")
-	public String index(@CookieValue(value = "bpmToken", defaultValue = "") String token, Model model) {
-        User user = null;
-        if(!token.isEmpty()){
-            user=dao.getToken(token);
-            if (user != null) {
-                model.addAttribute(user);
-            }
-        }
+	public String index(@CookieValue(value = "bpmToken", defaultValue = "") String token, Model model, HttpServletResponse response) {
+		User user = null;
+		if(!token.isEmpty()){
+			user=dao.getToken(token);
+		}
+		if (user != null) {
+			model.addAttribute(user);
+		} else {
+			try {
+				response.sendRedirect(response.encodeRedirectURL("/login"));
+			} catch(IOException e) {
+				log.error(e.getMessage());
+			}
+		}
         Map<Integer, Transaction> transactions = dao.getTransactions();
         Map<Integer, Account> accounts = dao.getAccounts();
         Map<Integer, Bill> bills = dao.getBills();
-        Map<Integer, Category> categopries = dao.getCategories();
+        Map<Integer, Category> categories = dao.getCategories();
 		model.addAttribute("message", new Date().toString());
         model.addAttribute("transactions",transactions.values());
         model.addAttribute("accounts",accounts.values());
         model.addAttribute("bills",bills.values());
-        model.addAttribute("categories",categopries.values());
+        model.addAttribute("categories",categories.values());
 		return "index"; //view
 	}
 }
