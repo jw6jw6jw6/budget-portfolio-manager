@@ -31,6 +31,6 @@ It takes a few commands to setup the MySQL database go ahead and login and run t
 Well, if you want to you can compile from source with a simple:
 > mvn package
 
-Or you can download the jar file. Just make sure you have a config.properties and have configured the path to your MySQL database in the same directory as the jar file when you execute the jar
+Or you can download the jar file from the [releases](https://github.com/jw6jw6jw6/budget-portfolio-manager/releases/) page. Just make sure you have a config.properties and have configured the path to your MySQL database in the same directory as the jar file when you execute the jar
 
 > java -jar budgetportfoliomanager-0.0.1-alpha.jar
