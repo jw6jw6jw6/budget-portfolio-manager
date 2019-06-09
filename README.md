@@ -13,7 +13,9 @@ I have tried a plethora of selfhosted budgeting and account tracking tools and h
 ## How do I run it?
 Well, if you want to you can compile from source with a simple:
 > mvn package
+
 Or you can download the jar file. Just make sure you have a config.properties in the same directory as the jar file when you execute the jar
+
 > cat config.properties
 > databaseUrl=192.168.1.x
 > databasePort=3306
