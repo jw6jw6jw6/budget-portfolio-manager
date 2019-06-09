@@ -38,7 +38,6 @@ public class AccountController {
         User user = null;
         if(!token.isEmpty()){
             user=dao.getToken(token);
-            log.error(dao.getTokens().toString());
             if (user != null) {
                 model.addAttribute(user);
             } else {
@@ -75,7 +74,6 @@ public class AccountController {
         User user = null;
         if(!token.isEmpty()){
             user=dao.getToken(token);
-            log.error(dao.getTokens().toString());
             if (user != null) {
                 model.addAttribute(user);
             }

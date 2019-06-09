@@ -50,7 +50,6 @@ public class TransactionController {
 		Transaction transaction = null;
 		if(id!=-1)
 			transaction=transactions.get(id);
-		log.info(transactions.size()+"");
 		model.addAttribute("message", new Date().toString()+"; Test");
 		if(id==-1) {
 			model.addAttribute("transactions", transactions.values());
@@ -95,8 +94,6 @@ public class TransactionController {
         }
         model.addAttribute("categories",dao.getCategories().values());
         model.addAttribute("accounts",dao.getAccounts().values());
-        log.error("Name: "+name+"\tAmount: "+amountString+"\tDate: "+dateString+"\tCategory: "+category);
-        log.error(category+"\t"+(!category.isEmpty())+"\t"+((name.isEmpty() || dateString.isEmpty() || amountString.isEmpty())));
         if(!category.isEmpty())
             if(name.isEmpty() || dateString.isEmpty() || amountString.isEmpty())
                 model.addAttribute("error","All fields are required");
@@ -119,7 +116,10 @@ public class TransactionController {
                     amount=amount*-1;
                 if(category1==null)
                     log.error("NULL category");
-                dao.insertTransaction(new Transaction(0, name, amount, category1 , user, date,account));
+                
+                Transaction transaction = new Transaction(0, name, amount, category1 , user, date,account);
+                dao.insertTransaction(transaction);
+                dao.updateBalanceNewTransaction(transaction);
                 dao.refreshData();
                 try {
                     response.sendRedirect(response.encodeRedirectURL("/transactions"));
@@ -176,6 +176,7 @@ public class TransactionController {
 //                model.addAttribute("error","All fields are required");
         } else{
             if (transaction != null) {
+                double origAmount=transaction.getAmount();
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
                 try {
                     if(!name.isEmpty()) {
@@ -206,7 +207,8 @@ public class TransactionController {
                         Account account = dao.getAccounts().get(accountId);
                         transaction.setAccount(account);
                     }
-
+    
+                    dao.updateBalanceEditTransaction(transaction, origAmount);
                     dao.updateTransaction(transaction);
                     dao.refreshData();
                     try {
@@ -253,9 +255,11 @@ public class TransactionController {
         }
 
         Transaction transaction = dao.getTransactions().get(Integer.parseInt(idString));
+	    Transaction origTransaction = transaction;
 
         if(transaction!=null) {
             dao.deleteTransaction(transaction);
+	        dao.updateBalanceDeleteTransaction(transaction);
             dao.refreshData();
         }
 

@@ -16,7 +16,7 @@ public class ConfigLoader {
     public Map<String,String> readConfig() {
         Map<String,String> config = new HashMap<>();
         log.error(System.getProperty("user.dir")+"/config.properties");
-        File file = new File(System.getProperty("user.dir")+"/config.properties");
+        File file = new File(System.getProperty("user.dir")+File.separator+"config.properties");
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
 

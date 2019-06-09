@@ -19,7 +19,6 @@ public class DAO {
 	Map<Integer, Account> accounts;
 	Map<Integer, Bill> bills;
 	Map<Integer, Role> roles;
-	Map<Integer, BalanceHistory> balanceHistory;
 	Map<String, User> tokens = new HashMap<>();
 	Connection conn;
 	Logger log = LoggerFactory.getLogger(DAO.class);
@@ -69,53 +68,61 @@ public class DAO {
 	public void removeToken(String token){
 		tokens.remove(token);
 	}
-
-	public void insertHistoryRecord(Transaction transaction) {
+	
+	public void updateBalanceNewTransaction(Transaction transaction) {
 		if(transaction!=null) {
-			Account account = transaction.getAccount();
-			if(account!=null) {
-				try {
-
-					PreparedStatement statement = conn.prepareStatement("INSERT INTO balance_history (original_balance,new_balance,account,transaction) VALUES (?,?,?,?)");
-					statement.setDouble(3, account.getBalance());
-					statement.setDouble(3, transaction.getAmount()+account.getBalance());
-					statement.setInt(5, account.getId());
-					statement.setInt(6, transaction.getId());
-					statement.executeUpdate();
-				} catch (SQLException ex) {
-					// handle any errors
-					log.error("Insert BalanceHistory (New Transaction) Error");
-					log.error("SQLException: " + ex.getMessage());
-					log.error("SQLState: " + ex.getSQLState());
-					log.error("VendorError: " + ex.getErrorCode());
-				}
+			try {
+				double balance = transaction.getAccount().getBalance()+transaction.getAmount();
+				PreparedStatement statement = conn.prepareStatement("UPDATE accounts SET balance = ? WHERE id = ?" );
+				statement.setDouble(1, balance);
+				statement.setInt(2, transaction.getAccount().getId());
+				statement.executeUpdate();
+			} catch (SQLException ex) {
+				// handle any errors
+				log.error("Update Account Balance (Update Transaction) Error");
+				log.error("SQLException: " + ex.getMessage());
+				log.error("SQLState: " + ex.getSQLState());
+				log.error("VendorError: " + ex.getErrorCode());
 			}
 		}
 	}
-
-	public void insertHistoryRecord(Transaction newTransaction, Transaction oldTransaction) {
-		if(newTransaction!=null && oldTransaction!=null) {
-			BalanceHistory balanceHistoryItem;
-			for(BalanceHistory bh : balanceHistory.values())
-				if(bh.getTransaction().getId()==newTransaction.getId())
-					balanceHistoryItem=bh;
-
-			if(balanceHistory!=null) {
-				try {
-					PreparedStatement statement = conn.prepareStatement("UPDATE  SET name = ? WHERE id = ?" );
-					statement.setDouble(3, newTransaction.getAccount().getBalance());
-					statement.setDouble(3, oldTransaction.getAmount()+newTransaction.getAccount().getBalance());
-					statement.setInt(5, newTransaction.getAccount().getId());
-					statement.setInt(6, newTransaction.getId());
-					statement.executeUpdate();
-				} catch (SQLException ex) {
-					// handle any errors
-					log.error("Insert BalanceHistory (New Transaction) Error");
-					log.error("SQLException: " + ex.getMessage());
-					log.error("SQLState: " + ex.getSQLState());
-					log.error("VendorError: " + ex.getErrorCode());
-				}
+	
+	public void updateBalanceDeleteTransaction(Transaction transaction) {
+		if(transaction!=null) {
+			try {
+				double balance = transaction.getAccount().getBalance()-transaction.getAmount();
+				PreparedStatement statement = conn.prepareStatement("UPDATE accounts SET balance = ? WHERE id = ?" );
+				statement.setDouble(1, balance);
+				statement.setInt(2, transaction.getAccount().getId());
+				statement.executeUpdate();
+			} catch (SQLException ex) {
+				// handle any errors
+				log.error("Update Account Balance (Update Transaction) Error");
+				log.error("SQLException: " + ex.getMessage());
+				log.error("SQLState: " + ex.getSQLState());
+				log.error("VendorError: " + ex.getErrorCode());
 			}
+		}
+	}
+	
+	public void updateBalanceEditTransaction(Transaction newTransaction, double oldAmount) {
+		if(newTransaction!=null) {
+			try {
+				double delta = newTransaction.getAmount()-oldAmount;
+				double balance = newTransaction.getAccount().getBalance()+delta;
+				PreparedStatement statement = conn.prepareStatement("UPDATE accounts SET balance = ? WHERE id = ?" );
+				statement.setDouble(1, balance);
+				statement.setInt(2, newTransaction.getAccount().getId());
+				statement.executeUpdate();
+			} catch (SQLException ex) {
+				// handle any errors
+				log.error("Update Account Balance (Update Transaction) Error");
+				log.error("SQLException: " + ex.getMessage());
+				log.error("SQLState: " + ex.getSQLState());
+				log.error("VendorError: " + ex.getErrorCode());
+			}
+		} else {
+			log.error("One of the transactions was null: "+newTransaction+"\t"+oldAmount);
 		}
 	}
 	
