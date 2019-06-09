@@ -21,7 +21,7 @@ public class Application {
         log.info("#####             BitBlue Software          #####");
         log.info("#####              Budget Manager           #####");
         log.info("#################################################");
-        log.info("#####                  v0.0.1               #####");
+        log.info("#####               v0.0.1-alpha            #####");
         log.info("#################################################");
         log.info("#################################################");
         /* This will return Long.MAX_VALUE if there is no preset limit */
