@@ -16,11 +16,4 @@ Well, if you want to you can compile from source with a simple:
 
 Or you can download the jar file. Just make sure you have a config.properties in the same directory as the jar file when you execute the jar
 
-> cat config.properties
-> databaseUrl=192.168.1.x
-> databasePort=3306
-> databaseName=budget
-> databaseUsername=budget
-> databasePassword=password
->
 > java -jar budgetportfoliomanager-0.0.1-alpha.jar
