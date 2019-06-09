@@ -29,13 +29,7 @@
                     <h1>Add Transaction</h1>
 
                     <div th:if="${error}">
-                        <div class="alert alert-danger">
-                            Invalid data.
-                        </div>
-                    </div>
-                    <div th:if="${logout}">
-                        <div class="alert alert-info">
-                            You have been logged out.
+                        <div class="alert alert-danger" th:text="${error}">
                         </div>
                     </div>
 

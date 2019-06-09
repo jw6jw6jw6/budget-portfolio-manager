@@ -220,7 +220,7 @@ public class DAO {
             statement.setString(1, transaction.getName());
             statement.setInt(2, transaction.getCategory().getId());
             statement.setDouble(3, transaction.getAmount());
-            statement.setDate(4, transaction.getDate());
+            statement.setDate(4, convertToSqlDate(transaction.getDate()));
             statement.setInt(5, transaction.getUser().getId());
             statement.setInt(6,transaction.getAccount().getId());
             statement.executeUpdate();
@@ -238,7 +238,7 @@ public class DAO {
 			PreparedStatement statement = conn.prepareStatement("INSERT INTO bills (name,amount,date,transaction,user) VALUES (?,?,?,?,?)" );
 			statement.setString(1, bill.getName());
 			statement.setDouble(2, bill.getAmount());
-			statement.setDate(3, bill.getDate());
+			statement.setDate(3, convertToSqlDate(bill.getDate()));
 			if(bill.getTransaction()!=null)
 				statement.setInt(4, bill.getTransaction().getId());
 			else
@@ -261,10 +261,10 @@ public class DAO {
 			statement.setString(2, user.getFirstName());
 			statement.setString(3, user.getLastName());
 			statement.setString(4, user.getPassword());
-			statement.setDate(5, user.getLastLogin());
+			statement.setDate(5, convertToSqlDate(user.getLastLogin()));
 			statement.setInt(6, user.getLoginCount());
 			statement.setString(7, user.getEmail());
-			statement.setDate(8, user.getAccountCreated());
+			statement.setDate(8, convertToSqlDate(user.getAccountCreated()));
 			statement.executeUpdate();
 		} catch (SQLException ex) {
 			// handle any errors
@@ -280,7 +280,7 @@ public class DAO {
 			PreparedStatement statement = conn.prepareStatement("UPDATE bills SET name = ?, amount = ?, date = ?, transaction = ?, user = ? WHERE id = ?" );
 			statement.setString(1, bill.getName());
 			statement.setDouble(2, bill.getAmount());
-			statement.setDate(3, bill.getDate());
+			statement.setDate(3, convertToSqlDate(bill.getDate()));
 			if(bill.getTransaction()!=null)
 				statement.setInt(4, bill.getTransaction().getId());
 			else
@@ -385,7 +385,7 @@ public class DAO {
 			PreparedStatement statement = conn.prepareStatement("UPDATE transactions SET name = ?, amount = ?, date = ?, category = ?, account = ? WHERE id = ?" );
 			statement.setString(1, transaction.getName());
 			statement.setDouble(2, transaction.getAmount());
-			statement.setDate(3, transaction.getDate());
+			statement.setDate(3, convertToSqlDate(transaction.getDate()));
 			statement.setInt(4, transaction.getCategory().getId());
 			statement.setInt(5, transaction.getAccount().getId());
 			statement.setInt(6, transaction.getId());
@@ -505,6 +505,14 @@ public class DAO {
 		FinancialInterface fi = new FinancialInterface();
 		fi.init();
 	}
+	
+	private java.util.Date convertToUtilDate(Date date){
+		return new java.util.Date(date.getTime());
+	}
+	
+	private java.sql.Date convertToSqlDate(java.util.Date date){
+		return new java.sql.Date(date.getTime());
+	}
 
 	private void init() {
 		log.info("Init DAO");
@@ -513,7 +521,7 @@ public class DAO {
 		try {
 			if(conn!=null)
 				conn.close();
-			conn = DriverManager.getConnection("jdbc:mysql://"+configs.get("databaseUrl")+":"+configs.get("databasePort")+"/"+configs.get("databaseName")+"?" + "serverTimezone=UTC&user="+configs.get("databaseUsername")+"&password="+configs.get("databasePassword"));
+			conn = DriverManager.getConnection("jdbc:mysql://"+configs.get("databaseUrl")+":"+configs.get("databasePort")+"/"+configs.get("databaseName")+"?" + "serverTimezone=CST&user="+configs.get("databaseUsername")+"&password="+configs.get("databasePassword"));
 		} catch (SQLException ex) {
 			// handle any errors
 			log.error("SQLException: " + ex.getMessage());

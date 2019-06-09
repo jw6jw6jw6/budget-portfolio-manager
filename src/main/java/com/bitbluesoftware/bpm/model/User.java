@@ -1,6 +1,6 @@
 package com.bitbluesoftware.bpm.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class User {
 	int id;

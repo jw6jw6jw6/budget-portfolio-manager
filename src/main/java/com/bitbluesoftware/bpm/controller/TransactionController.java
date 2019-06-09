@@ -35,7 +35,6 @@ public class TransactionController {
         User user = null;
         if(!token.isEmpty()){
             user=dao.getToken(token);
-            log.error(dao.getTokens().toString());
             if (user != null) {
                 model.addAttribute(user);
             } else {
@@ -63,6 +62,14 @@ public class TransactionController {
 		}
 		return "transactions"; //view
 	}
+	
+	private boolean checkDateIsValid(Date date) {
+	    if(new Date().before(date)) {
+	        return false;
+        } else {
+	        return true;
+        }
+    }
 
     @RequestMapping("/add/transaction")
     public String addTransactions(@CookieValue(value = "bpmToken", defaultValue = "") String token,
@@ -75,7 +82,6 @@ public class TransactionController {
         User user = null;
         if(!token.isEmpty()){
             user=dao.getToken(token);
-            log.error(dao.getTokens().toString());
             if (user != null) {
                 model.addAttribute(user);
             }
@@ -98,9 +104,13 @@ public class TransactionController {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
             try {
                 Date date1 = format.parse(dateString);
+                
+                if(!checkDateIsValid(date1)) {
+                    model.addAttribute("error","Date cannot be in the future");
+                    return "addTransaction";
+                }
                 java.sql.Date date = new java.sql.Date(date1.getTime());
-                log.error(dao.getCategories().toString());
-                log.error(Integer.parseInt(category)+"");
+                log.error("Check Date: "+(checkDateIsValid(date1))+" / "+dateString+" "+date1.toString()+"\t"+date.toString());
                 Category category1 = dao.getCategories().get(Integer.parseInt(category));
                 Double amount = Double.parseDouble(amountString);
                 int accountId = Integer.parseInt(accountString);
@@ -174,6 +184,10 @@ public class TransactionController {
 
                     if (!dateString.isEmpty()) {
                         Date date1 = format.parse(dateString);
+                        if(!checkDateIsValid(date1)) {
+                            model.addAttribute("error","Date cannot be in the future");
+                            return "editTransaction";
+                        }
                         java.sql.Date date = new java.sql.Date(date1.getTime());
                         transaction.setDate(date);
                     }
