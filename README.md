@@ -4,10 +4,10 @@
 An open source budget and account tracking solution. Its currently in Alpha but as features are added it will continue to get expanded. Feature requests and issues can be reported in GitHub.
 
 ### Is it supported?
-This software is currently in Alpha, I wouldnt reccomend running it in any form of prod like environment. If you have trouble you can submit an issue here on GitHub and I'll get back to you as soon as possible.
+This software is currently in Alpha, I wouldn't recommend running it in any form of prod like environment. If you have trouble you can submit an issue here on GitHub and I'll get back to you as soon as possible.
 
 ### Why are you building this?
-I have tried a plethora of selfhosted budgeting and account tracking tools and have yet to be satisfied with any of them.
+I have tried a plethora of self-hosted budgeting and account tracking tools and have yet to be satisfied with any of them.
 
 
 ## How do I run it?
