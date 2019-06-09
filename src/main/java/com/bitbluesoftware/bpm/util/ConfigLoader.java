@@ -15,8 +15,12 @@ public class ConfigLoader {
 
     public Map<String,String> readConfig() {
         Map<String,String> config = new HashMap<>();
-        log.info(System.getProperty("user.dir")+"/config.properties");
+        log.info("Config file location: "+System.getProperty("user.dir")+"/config.properties");
         File file = new File(System.getProperty("user.dir")+File.separator+"config.properties");
+        if(!file.exists()) {
+            log.error("Config file not found. Shutting down.");
+            System.exit(1);
+        }
         try {
             BufferedReader br = new BufferedReader(new FileReader(file));
 
