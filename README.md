@@ -1,5 +1,9 @@
 # Budget Portfolio Manager
 
+
+## EOL Notice.
+This project has been marked as End Of Life and is not scheduled to recieve any future development efforts. Use at your own risk.
+
 ### What is this?
 An open source budget and account tracking solution. Its currently in Alpha but as features are added it will continue to get expanded. Feature requests and issues can be reported in GitHub.
 
